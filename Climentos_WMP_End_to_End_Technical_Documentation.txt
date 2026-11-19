@@ -1,0 +1,725 @@
+CLIMENTOS WORK MANAGEMENT PLATFORM
+END-TO-END PROJECT TECHNICAL DOCUMENTATION
+
+Version 1.0 | 13 November 2026
+Final project handover reference
+
+CONTENTS
+--------
+DOCUMENT CONTROL
+1. PROJECT OVERVIEW
+2. PROJECT OBJECTIVES AND SCOPE
+3. TECHNOLOGY STACK AND PROJECT STRUCTURE
+3.1 Main source layout
+4. HIGH-LEVEL ARCHITECTURE AND REQUEST FLOW
+5. USER PERSPECTIVES AND PAGE JOURNEYS
+5.1 Employee perspective
+5.2 Manager perspective
+5.3 Admin perspective
+6. END-TO-END BUSINESS WORKFLOWS
+6.1 Ticket creation
+6.2 Assignment and work execution
+6.3 Resolution and status tracking
+6.4 Comments, attachments and ticket history
+6.5 Notifications
+7. ROLE-BASED ACCESS CONTROL AND DATA SCOPE
+7.1 Account lifecycle safeguards
+8. DATABASE DESIGN
+8.1 Important relationships
+9. API CATALOGUE — IMPLEMENTED ENDPOINTS
+9.1 API response and HTTP behaviour
+10. SUPPORT ASSISTANT
+11. VALIDATION, ERROR HANDLING AND RELIABILITY
+12. DEVELOPMENT ISSUES, BUGS AND RESOLUTIONS
+12.1 Confirmed test outcomes
+13. SECURITY AND CONFIGURATION
+14. TESTING AND ACCEPTANCE
+15. KNOWN IMPLEMENTATION NOTES AND LIMITATIONS
+16. PROJECT HANDOVER AND MAINTENANCE
+17. CONCLUSION
+
+====================================================================================================
+
+DOCUMENT CONTROL
+================
+Project: Climentos Work Management Platform (Climentos WMP)
+
+Document: End-to-End Project Technical Documentation
+
+Version: 1.0
+
+Prepared: 13 November 2026
+
+Document status: Final project handover reference
+
+Audience: Project coordinators, administrators, developers, testers and operational stakeholders
+
+
+1. PROJECT OVERVIEW
+===================
+Climentos Work Management Platform is an internal work-request and ticket management application. It
+provides a shared workspace in which employees can raise work requests, follow progress and submit
+resolution details, while Managers coordinate team workload and Administrators maintain
+organisation-level users, departments and access.
+
+The application is implemented as a multi-page web application. The frontend uses HTML, CSS and
+vanilla JavaScript. The server-side application uses Python with Flask. MySQL stores users, roles,
+departments, teams, tickets, comments, attachments, notifications, settings records and activity-log
+records.
+
+The project is organised around three operational perspectives: Employee, Manager and Admin. The
+pages and API permissions are designed so that each role receives the functions needed for its
+responsibilities. Access is enforced in Flask rather than relying only on hiding navigation items in
+the browser.
+
+• Employee: raises tickets, views tickets available to the employee, starts work on assigned
+  tickets, adds comments, submits resolutions, manages permitted profile details and reads
+  notifications.
+• Manager: handles tickets within the managed reporting/team scope, assigns work to eligible
+  employees or teams, updates ticket status, manages team membership and reviews scoped reports.
+• Admin: manages employee and Manager accounts, reporting relationships, departments, teams,
+  organisation-wide ticket administration, and overall reporting.
+
+2. PROJECT OBJECTIVES AND SCOPE
+===============================
+The platform centralises work requests that would otherwise be followed through separate messages or
+informal communication. Each request receives a unique ticket reference and a stored status.
+Assignment, comments, resolution information and notifications provide a traceable work process.
+
+The delivered implementation includes the frontend, Flask API layer, MySQL persistence, session-
+based authentication, role checks, ticket lifecycle operations, user and department administration,
+team management, notifications, reporting, profile operations and an in-product Support Assistant.
+
+The Settings page currently stores interface preferences in browser local storage. It is not a
+server-wide configuration console. This distinction is important when describing the current
+implementation.
+
+• Provide one consistent ticket workflow from creation through assignment, work in progress and
+  resolution.
+• Separate employee, manager and administrator responsibilities.
+• Protect ticket and account data through server-side role and ownership checks.
+• Persist operational data in MySQL and return structured JSON responses to the browser.
+• Provide operational visibility through dashboard metrics, reports and notifications.
+• Offer contextual in-app guidance through the Support Assistant.
+
+3. TECHNOLOGY STACK AND PROJECT STRUCTURE
+=========================================
+
+Layer / Area           | Technology or location    | Responsibility                                  
+-----------------------+---------------------------+-------------------------------------------------
+Frontend               | HTML5, CSS3, vanilla      | Pages, forms, navigation, page rendering,       
+                       | JavaScript                | validation and API calls.                       
+Backend                | Python, Flask             | Application startup, routing, authentication,   
+                       |                           | authorization and business logic.               
+Database               | MySQL; mysql-connector-   | Persistent users, roles, teams, tickets,        
+                       | python                    | comments, attachments, notifications and logs.  
+Configuration          | python-dotenv;            | Loads environment-based application and database
+                       | backend/.env              | configuration.                                  
+Password security      | Werkzeug password hashing | Hashes passwords on account creation and        
+                       |                           | verifies hashes at sign-in.                     
+Session security       | Flask session cookie      | Maintains signed-in identity and role context.  
+Uploads                | Werkzeug secure_filename; | Stores ticket attachments under generated       
+                       | backend/uploads/tickets   | server-side filenames.                          
+Frontend scripts       | frontend/js/              | Shared and page-specific JavaScript, including  
+                       |                           | api.js and global.js.                           
+Styles                 | frontend/css/             | Shared components, page styles, responsive      
+                       |                           | behaviour, themes and support-chat styling.     
+
+
+3.1 Main source layout
+======================
+• frontend/index.html – frontend entry file.
+• frontend/pages/ – login, registration, dashboard, raise ticket, My Tickets, All Tickets, ticket
+  details, employee profile, notifications, team management, reports, user management, department
+  management and settings pages.
+• frontend/js/ – API helper, shared global behaviour and page-specific scripts.
+• frontend/css/ – shared and page-specific stylesheets, responsive rules, animations and Support
+  Assistant styling.
+• backend/app.py – Flask application factory, frontend serving, blueprint registration and local run
+  entry point.
+• backend/common.py – standard API error response, login_required and roles_required decorators.
+• backend/config.py and backend/extensions.py – environment configuration and MySQL connection
+  factory.
+• backend/routes/ – authentication, ticket, team, user, department, notification, profile, report
+  and support routes.
+• backend/dashboard_routes.py – role-scoped dashboard summary API.
+• backend/ticket_scope.py – shared role-aware ticket visibility predicate.
+• database/ – database creation, table definitions and role seed scripts.
+
+4. HIGH-LEVEL ARCHITECTURE AND REQUEST FLOW
+===========================================
+The system uses a browser–API–database structure. The browser loads a page and its JavaScript.
+JavaScript sends same-origin HTTP requests to Flask. Flask validates the session and role, validates
+incoming data, performs parameterised MySQL operations and returns JSON. The frontend then updates
+the relevant page elements.
+
+Flask serves the frontend from the project frontend directory. The root URL redirects to
+/pages/login.html. The application is created by create_app() in backend/app.py and registers the
+route blueprints, including the dashboard blueprint.
+
+Database connections are created through the shared connection factory. The connection uses the
+configured host, port, username, password and database name, with utf8mb4 character support and
+transactions enabled.
+
+• 1. User opens the application and reaches the login page.
+• 2. User submits email, password and selected role.
+• 3. POST /api/login checks the account in MySQL, verifies the password hash, checks account
+  activation and confirms that the selected role matches the stored role.
+• 4. Flask creates a fresh session and returns the user identity and dashboard redirect path.
+• 5. The frontend loads the role-appropriate workspace and requests protected data.
+• 6. Protected endpoints revalidate the user against MySQL, refresh the session identity and then
+  check the allowed role.
+• 7. The route applies record-level scope rules, reads or writes database records and returns a JSON
+  response.
+• 8. The frontend renders the returned records, status, counts or messages.
+
+5. USER PERSPECTIVES AND PAGE JOURNEYS
+======================================
+The three perspectives share the same application shell but have different operational permissions.
+The role is read from the authenticated server session and checked again on protected API requests.
+
+
+5.1 Employee perspective
+========================
+
+Page / feature           | Employee workflow                                                        
+-------------------------+--------------------------------------------------------------------------
+Dashboard                | Views personal ticket metrics, recent activity and role-appropriate      
+                         | navigation. Dashboard summary is retrieved through the role-scoped       
+                         | dashboard API.                                                           
+Raise Ticket             | Enters title, description, category, priority and department; can attach 
+                         | a supporting file. The backend validates input, creates a unique ticket  
+                         | number and stores the ticket and optional attachment.                    
+My Tickets               | Reviews tickets created by the employee, as well as tickets assigned     
+                         | directly or through an active team where supported by the list route. The
+                         | page supports searching/filtering and opens ticket details.              
+Ticket Details           | Views permitted ticket information, public comments and attachments. The 
+                         | backend checks ticket visibility before returning the detail record.     
+Work on assigned ticket  | An eligible Employee starts work, which changes status to IN_PROGRESS.   
+                         | The employee must be assigned directly or belong to an active assigned   
+                         | team.                                                                    
+Comments and resolution  | Adds a public comment and submits a resolution summary after work has    
+                         | started. Resolution is recorded in ticket comments and the ticket status 
+                         | changes to RESOLVED.                                                     
+My Profile               | Views and updates permitted personal details, and can change the account 
+                         | password after validating the current password.                          
+Notifications            | Views personal notifications, unread count and recent notifications; can 
+                         | mark one or all as read or dismiss a notification.                       
+Support Assistant        | Opens the in-app help panel, selects suggested questions or enters a     
+                         | question to receive role-aware guidance.                                 
+
+
+5.2 Manager perspective
+=======================
+
+Page / feature           | Manager workflow                                                         
+-------------------------+--------------------------------------------------------------------------
+Dashboard                | Views dashboard metrics and recent tickets within the manager's allowed  
+                         | scope.                                                                   
+All Tickets              | Reviews tickets in the manager's direct-report and managed-team scope.   
+                         | The API does not return unrelated organisation tickets.                  
+Assignment               | Loads eligible employees and teams. Can assign a ticket to one active    
+                         | Employee or one active team, but not both simultaneously.                
+Ticket status            | Updates ticket status within the manager's permitted ticket scope. The   
+                         | creator is notified when the status changes.                             
+Team Management          | Views team management data and can add or remove members where permitted.
+                         | Team creation and team updates are restricted to Admin.                  
+Reports & Analytics      | Reviews scoped totals, status and priority distribution, department      
+                         | breakdown and creation/resolution trends. Filters include period and     
+                         | department.                                                              
+Profile, notifications   | Uses shared profile, notification and contextual help functions.         
+and Support Assistant    |                                                                          
+
+
+5.3 Admin perspective
+=====================
+
+Page / feature           | Admin workflow                                                           
+-------------------------+--------------------------------------------------------------------------
+Dashboard                | Views organisation-wide dashboard totals and recent ticket activity.     
+All Tickets              | Views and manages tickets across the organisation, including assignment  
+                         | and status updates.                                                      
+User Management          | Lists users, creates Employee and Manager accounts, edits user details   
+                         | and role/reporting information, and activates or deactivates accounts.   
+Department Management    | Creates, edits and activates/deactivates departments. The page displays  
+                         | member counts and team-linked manager information.                       
+Team Management          | Creates and edits teams, assigns managers and manages team membership.   
+Reports & Analytics      | Views organisation-wide reporting data and uses period and department    
+                         | filters.                                                                 
+Settings                 | Provides local interface preferences. The current Settings implementation
+                         | stores these preferences in browser local storage rather than a shared   
+                         | server-side settings API.                                                
+Profile, notifications   | Uses shared account and help features.                                   
+and Support Assistant    |                                                                          
+
+
+6. END-TO-END BUSINESS WORKFLOWS
+================================
+
+6.1 Ticket creation
+===================
+• Employee or Manager opens Raise Ticket and enters the required request information.
+• The browser performs input checks and sends multipart form data to POST /api/tickets.
+• Flask validates the title, description, category, priority, active department and optional
+  attachment constraints.
+• The backend creates a temporary internal ticket number within the transaction, inserts the ticket,
+  then assigns the final reference in the format CLM-YYYY-000001 using the inserted record ID.
+• If an attachment is provided, it is stored with a generated storage name and its metadata is
+  inserted into ticket_attachments.
+• A notification is inserted for the ticket creator. If the creator has a direct manager, that
+  manager receives a new-team-ticket notification.
+• The database transaction is committed and the API returns HTTP 201 with the created ticket
+  details.
+
+6.2 Assignment and work execution
+=================================
+• Manager or Admin opens an accessible ticket and requests assignment options.
+• The backend returns active employees and teams the current Manager/Admin is authorised to assign.
+• Manager can assign only direct reports or active members of teams managed by that Manager. Admin
+  can assign to eligible active employees or teams across the organisation.
+• A ticket may be assigned to an employee or a team; the API rejects a request that supplies both.
+• New assignment recipients are notified. For team assignment, active team members and relevant
+  manager notification recipients are resolved by the backend.
+• An assigned Employee starts work through PATCH /api/tickets/{ticket_id}/work-status. Only
+  IN_PROGRESS is accepted by this employee action.
+• An Employee cannot start work on a completed ticket. The backend checks that the employee is the
+  direct assignee or belongs to the active assigned team.
+
+6.3 Resolution and status tracking
+==================================
+• An Employee must start work before submitting a resolution.
+• The resolution summary must contain between 10 and 4,000 characters.
+• The backend inserts a public resolution comment, updates the ticket status to RESOLVED, records
+  resolved_at and updates updated_at.
+• The ticket creator receives a resolution notification when the resolver is a different user.
+• Manager/Admin can also update ticket status through the management endpoint. Supported values are
+  OPEN, IN_PROGRESS, ON_HOLD, RESOLVED, CLOSED and REJECTED.
+• Status changes by Manager/Admin are recorded in the ticket row and notify the ticket creator when
+  a real transition occurs.
+
+6.4 Comments, attachments and ticket history
+============================================
+Ticket details are returned only after the server confirms that the signed-in user is permitted to
+access the ticket. Public comments and attachment metadata are returned with the ticket. Attachment
+download uses a dedicated route and performs ticket-level access checks.
+
+Comments are stored with the author and timestamp. The current public comment endpoint creates non-
+internal comments. Attachment records store the original filename, generated stored filename,
+relative storage path, MIME type and file size.
+
+
+6.5 Notifications
+=================
+• Ticket creation creates a confirmation notification for the creator and, where configured, a new-
+  ticket notification for the direct manager.
+• Assignment changes notify the newly assigned employee or active members of the assigned team.
+• Manager/Admin status changes notify the ticket creator.
+• Employee start-work and resolution actions notify the creator when the acting employee is not the
+  creator.
+• GET /api/notifications returns only the current user's notifications and counts for total, unread
+  and today.
+• Users can mark one notification as read/unread, mark all notifications as read or dismiss one
+  notification. Every mutation includes the current user ID in its database condition.
+
+7. ROLE-BASED ACCESS CONTROL AND DATA SCOPE
+===========================================
+Authentication and authorisation are implemented centrally in backend/common.py. login_required
+checks for a session user and then re-queries MySQL on every protected request. If the account no
+longer exists or is inactive, the session is cleared. If the database cannot verify the account, the
+request fails closed with HTTP 503. The session role and identity are refreshed from the database so
+account changes take effect without relying on stale browser values.
+
+roles_required wraps login_required and compares the current database-backed role with the roles
+permitted for the endpoint. A request from a signed-in but unauthorised role receives HTTP 403.
+
+
+Role                     | Primary data scope and capabilities                                      
+-------------------------+--------------------------------------------------------------------------
+EMPLOYEE                 | Personal dashboard scope is based on tickets created by the employee. My 
+                         | Tickets additionally includes tickets assigned directly or through the   
+                         | employee's active teams. Employee work actions require direct assignment 
+                         | or active team membership.                                               
+MANAGER                  | Can view tickets created by or assigned to direct reports, tickets       
+                         | related to active teams managed by the Manager, and tickets assigned to  
+                         | those teams or their active members. Assignment options are limited to   
+                         | direct reports and managed teams.                                        
+ADMIN                    | Organisation-wide ticket scope. Can manage users, departments and team   
+                         | configuration, and administer organisation-wide ticket assignment and    
+                         | status.                                                                  
+
+
+7.1 Account lifecycle safeguards
+================================
+• Inactive accounts are rejected during login.
+• Protected API requests re-check account activation and current role against MySQL, so a previously
+  issued session does not preserve access after deactivation or role change.
+• User creation and editing use Werkzeug password hashing when a password is supplied.
+• Admin user-management code restricts newly created accounts to Employee or Manager roles; role
+  updates support Employee, Manager and Admin.
+• Managers report to the Admin who creates or updates them. Employees can be assigned to an active
+  Manager. Admin has no reporting manager.
+• The last active Admin cannot be deactivated or demoted. The code locks active Admin rows before
+  the relevant update to protect this rule against concurrent changes.
+
+8. DATABASE DESIGN
+==================
+The database scripts create the climentos_wmp database, define the relational tables and seed the
+three application roles. The schema uses InnoDB foreign keys and utf8mb4 character support.
+Application queries use parameterised values and explicit transactions for multi-step writes.
+
+
+Table                    | Purpose and key relationships                                            
+-------------------------+--------------------------------------------------------------------------
+roles                    | Stores EMPLOYEE, MANAGER and ADMIN role names.                           
+departments              | Stores department name, description, active state and creation timestamp.
+users                    | Stores account identity, unique email, password hash, role, department,  
+                         | manager, phone, job title, profile image, active state and login         
+                         | timestamps.                                                              
+teams                    | Stores team name, department, manager, description and active state.     
+team_members             | Many-to-many membership link between teams and users.                    
+tickets                  | Stores ticket reference, title, description, category, priority, status, 
+                         | creator, assignee, team, department, due date and lifecycle timestamps.  
+ticket_comments          | Stores comments against tickets, author, internal/public flag and        
+                         | timestamp.                                                               
+ticket_attachments       | Stores uploaded attachment metadata and storage location.                
+notifications            | Stores recipient-specific messages, optional ticket link, read state and 
+                         | timestamps.                                                              
+system_settings          | Key/value settings table with optional updater reference. The current    
+                         | Settings page does not use this table for its browser preference         
+                         | controls.                                                                
+activity_logs            | Stores user, action, entity, JSON details, IP address and timestamp. The 
+                         | table is defined in the schema; the reviewed routes do not establish a   
+                         | complete application-wide audit-writing workflow.                        
+
+
+8.1 Important relationships
+===========================
+• One role can be associated with many users.
+• A department can contain many users and teams.
+• A user may report to another user through users.manager_id.
+• A team may have one manager and many members through team_members.
+• One user can create many tickets; a ticket may be assigned to one employee or one team.
+• A ticket can have multiple comments, attachments and notifications.
+• Notifications belong to one user and may reference a ticket.
+• Foreign-key rules protect references and define deletion behaviour, including cascade for team
+  membership and ticket child records where specified.
+
+9. API CATALOGUE — IMPLEMENTED ENDPOINTS
+========================================
+The following routes are registered by the current Flask application. Dynamic path values are shown
+in braces. Unless stated otherwise, JSON endpoints return a success flag and a message or data
+object. Protected routes require the Flask session and revalidation of the account against MySQL.
+
+
+Method and endpoint    | Access                    | Purpose                                         
+-----------------------+---------------------------+-------------------------------------------------
+GET /api/health        | Public                    | Checks backend/database health.                 
+GET /api/roles         | Public                    | Returns configured role options.                
+POST /api/login        | Public                    | Authenticates email/password and selected role; 
+                       |                           | starts session.                                 
+GET /api/me            | Signed-in user            | Returns the current authenticated session       
+                       |                           | identity.                                       
+POST /api/logout       | Public/session            | Clears the current session.                     
+POST /api/register     | Public                    | Creates an Employee account after validating    
+                       |                           | details, active department and unique email.    
+GET /api/admin/summary | Admin                     | Returns administrator summary data.             
+GET                    | Employee, Manager, Admin  | Returns role-scoped ticket metrics, status      
+/api/dashboard/summary |                           | distribution, activity trend and recent tickets.
+                       |                           | period=week|month|year.                         
+GET /api/departments   | Public                    | Returns active departments for form selection.  
+GET                    | Admin                     | Returns department records, member counts, team-
+/api/admin/departments |                           | linked manager counts and summary statistics.   
+POST                   | Admin                     | Creates a department.                           
+/api/admin/departments |                           |                                                 
+PUT /api/admin/departm | Admin                     | Updates department name, description and active 
+ents/{department_id}   |                           | state.                                          
+PATCH /api/admin/depar | Admin                     | Changes department active state.                
+tments/{department_id} |                           |                                                 
+/status                |                           |                                                 
+POST /api/tickets      | Employee, Manager         | Creates a ticket and optional attachment;       
+                       |                           | returns 201 and a generated ticket reference.   
+GET /api/tickets/my    | Employee, Manager         | Returns tickets created by the current user and 
+                       |                           | tickets assigned directly or through active     
+                       |                           | teams.                                          
+GET /api/tickets       | Manager, Admin            | Returns tickets within Manager scope or all     
+                       |                           | Admin scope.                                    
+GET /api/tickets/assig | Manager, Admin            | Returns assignable active employees and teams   
+nment-options          |                           | for the current role.                           
+PATCH /api/tickets/{ti | Manager, Admin            | Assigns/reassigns a ticket to one eligible      
+cket_id}/assignment    |                           | employee or team.                               
+PATCH /api/tickets/{ti | Manager, Admin            | Changes ticket status within the caller's ticket
+cket_id}/status        |                           | scope.                                          
+GET /api/tickets/{tick | Employee, Manager, Admin  | Returns ticket details, public comments and     
+et_id}/details         |                           | attachment metadata after access check.         
+GET /api/tickets/{tick | Employee, Manager, Admin  | Downloads an attachment after ticket-level      
+et_id}/attachments/{at |                           | access validation.                              
+tachment_id}           |                           |                                                 
+POST /api/tickets/{tic | Employee, Manager, Admin  | Adds a public comment to an accessible ticket.  
+ket_id}/comments       |                           |                                                 
+PATCH /api/tickets/{ti | Employee                  | Starts work on an assigned ticket by setting    
+cket_id}/work-status   |                           | IN_PROGRESS.                                    
+POST /api/tickets/{tic | Employee                  | Submits resolution text and marks an assigned   
+ket_id}/resolve        |                           | in-progress ticket RESOLVED.                    
+GET /api/team-         | Manager, Admin            | Returns team-management data within role        
+management             |                           | permissions.                                    
+POST /api/teams        | Admin                     | Creates a team.                                 
+PUT                    | Admin                     | Updates team details and manager/department     
+/api/teams/{team_id}   |                           | configuration.                                  
+POST /api/teams/{team_ | Manager, Admin            | Adds a member subject to team/role scope checks.
+id}/members            |                           |                                                 
+DELETE /api/teams/{tea | Manager, Admin            | Removes a member subject to team/role scope     
+m_id}/members/{user_id |                           | checks.                                         
+}                      |                           |                                                 
+GET /api/admin/users   | Admin                     | Lists users with role, department, manager and  
+                       |                           | account status, plus department and manager     
+                       |                           | options.                                        
+POST /api/admin/users  | Admin                     | Creates an Employee or Manager account with a   
+                       |                           | hashed password.                                
+PUT /api/admin/users/{ | Admin                     | Updates account details, role, reporting        
+user_id}               |                           | relationship and optional password.             
+PATCH /api/admin/users | Admin                     | Activates/deactivates a user with account       
+/{user_id}/status      |                           | lifecycle protections.                          
+GET /api/profile       | Signed-in user            | Returns the current user's profile, department, 
+                       |                           | manager and account details.                    
+PUT /api/profile       | Signed-in user            | Updates permitted profile name, email and phone 
+                       |                           | fields.                                         
+POST                   | Signed-in user            | Validates current password and changes the      
+/api/profile/change-   |                           | password hash.                                  
+password               |                           |                                                 
+GET /api/notifications | Signed-in user            | Returns only the current user's notifications   
+                       |                           | and total/unread/today counts.                  
+PATCH /api/notificatio | Signed-in user            | Marks a notification read or unread only when it
+ns/{notification_id}/r |                           | belongs to the caller.                          
+ead                    |                           |                                                 
+POST /api/notification | Signed-in user            | Marks all notifications belonging to the caller 
+s/read-all             |                           | as read.                                        
+DELETE /api/notificati | Signed-in user            | Dismisses only a notification belonging to the  
+ons/{notification_id}  |                           | caller.                                         
+GET                    | Employee, Manager, Admin  | Returns scoped reporting totals, status/priority
+/api/reports/summary   |                           | breakdown, department breakdown and trends.     
+                       |                           | period=7|30|90|all; optional department_id.     
+POST /api/support/chat | Signed-in user            | Returns role-aware Support Assistant guidance,  
+                       |                           | suggested page action and FAQ fallback response.
+
+
+9.1 API response and HTTP behaviour
+===================================
+Common API errors are returned as JSON with success=false and a message. The API uses standard HTTP
+status codes: 200 for successful reads or updates, 201 for created resources, 400 for invalid input,
+401 for missing/invalid authentication, 403 for insufficient permission, 404 when a resource is
+missing or outside the caller's scope, 409 for conflicting state, and 500 for unexpected
+server/database failures. The session verification decorator may return 503 when account validity
+cannot be confirmed because the database is unavailable.
+
+Ticket creation and other multi-step operations use database transactions. On failure, the backend
+rolls back database changes. Where a ticket attachment has already been written to disk, the ticket
+creation error path attempts to remove the saved file so the filesystem does not retain an orphaned
+upload.
+
+
+10. SUPPORT ASSISTANT
+=====================
+The Support Assistant is available from the application interface as an in-product chat panel. It
+provides a personalised greeting, suggested questions and a text input for employee questions. The
+browser sends the question and limited conversation history to POST /api/support/chat.
+
+The backend selects answers using the signed-in user's role. The built-in FAQ response path can
+answer common questions about tickets, profiles, notifications, passwords, teams, reports and
+navigation. The response may also include a role-appropriate page action so the frontend can guide
+the user to a relevant screen.
+
+The backend contains an optional external model integration path when a provider key is configured.
+If that path is not configured or does not return a usable answer, the route falls back to the local
+FAQ answer. The FAQ fallback therefore remains available without depending on a paid AI service. The
+assistant does not itself claim to make protected business changes; users complete account or ticket
+actions in the corresponding application pages.
+
+• Rejects an empty question and limits the question length to 1,200 characters.
+• Uses the authenticated session role when preparing guidance.
+• Limits supplied conversation history before forwarding it to the optional answer provider.
+• Returns an answer, response mode and an optional navigation action.
+• Unknown questions receive a helpful fallback that directs the user to clarify the question or
+  contact the administrator.
+
+11. VALIDATION, ERROR HANDLING AND RELIABILITY
+==============================================
+• Input validation is performed on the server even when the browser also validates fields.
+• Email addresses are normalised to lowercase and checked for uniqueness.
+• Passwords must meet the configured minimum length and are stored as hashes, not plain text.
+• Ticket title, description, category, priority, department and attachment constraints are checked
+  before insertion.
+• Comments and resolution summaries have explicit length limits.
+• Role and ownership rules are checked at the API layer for protected records.
+• Database writes use parameterised SQL and transactions. Errors are logged server-side and returned
+  to the browser using safe messages.
+• Database cursors and connections are closed in finally blocks throughout the route modules.
+• Ticket upload names are secured and stored using generated names to avoid relying on user-supplied
+  paths.
+
+12. DEVELOPMENT ISSUES, BUGS AND RESOLUTIONS
+============================================
+The following items record implementation issues that arose during development and the corresponding
+corrections made or incorporated into the current project. Items described as tested below are
+limited to the test outcomes that were explicitly confirmed during project work.
+
+
+Issue / observed         | Resolution applied or recorded outcome                                   
+behaviour                |                                                                          
+-------------------------+--------------------------------------------------------------------------
+Foreign-key failure      | The creator reference must be an existing users.id. Ticket creation now  
+while inserting a ticket | derives created_by from the authenticated Flask session rather than      
+with an invalid          | accepting an arbitrary creator ID from the browser.                      
+created_by user          |                                                                          
+reference (MySQL 1452).  |                                                                          
+Ticket visibility could  | A shared ticket-scope helper and endpoint-level ownership checks were    
+expose records outside   | introduced. Employee, Manager and Admin receive different scopes; ticket 
+an employee or manager's | details, comments, attachments, assignment and status operations enforce 
+responsibility.          | access in Flask.                                                         
+Manager could attempt to | Assignment options are scoped to direct reports and teams managed by the 
+assign tickets to        | Manager. The assignment endpoint revalidates the selected employee/team  
+unrelated employees or   | and rejects out-of-scope assignments.                                    
+teams.                   |                                                                          
+A deactivated user's     | login_required rechecks the user's active state and current role from    
+existing session could   | MySQL on every protected API request. Inactive or missing accounts have  
+otherwise remain usable. | their session cleared; DB verification failure returns 503 (fail closed).
+The last active Admin    | Admin user-management logic locks active Admin records and blocks        
+could be removed or      | deactivation/demotion of the last active Admin.                          
+demoted, potentially     |                                                                          
+leaving no               |                                                                          
+administrator.           |                                                                          
+Employee ticket workflow | Employee work-status endpoint accepts only IN_PROGRESS for an eligible   
+needed a clear start-    | assigned ticket. Resolution requires the ticket to be in progress and a  
+work and resolution      | valid resolution summary, then stores the resolution as a comment and    
+sequence.                | sets RESOLVED.                                                           
+Notification updates     | Notification read, read-all and dismiss queries include the signed-in    
+needed to remain private | user ID. Notifications are created in the same transaction as related    
+to the recipient.        | ticket operations where implemented.                                     
+Unread notification      | Notification API returns the user's unread count and page data from      
+count and bell refresh   | MySQL; the frontend can refresh and navigate to the related ticket       
+needed to use persisted  | notification.                                                            
+data.                    |                                                                          
+Topbar identity did not  | Shared identity classes were aligned so global.js can update the signed- 
+always update            | in user's name, role and avatar consistently. The Notifications page fix 
+consistently across      | was confirmed working.                                                   
+pages.                   |                                                                          
+Some page scripts        | Duplicate page-level handlers were removed where identified so shared    
+duplicated theme,        | global.js owns the common interaction and avoids double toggles or       
+profile-dropdown or      | duplicate logout behaviour.                                              
+logout handlers already  |                                                                          
+provided globally.       |                                                                          
+Mobile sidebar did not   | The intended shared state uses .open on the sidebar and .show on the     
+open consistently        | overlay. Duplicate page-level mobile handlers were consolidated/removed  
+because JavaScript state | and the entrance animation was adjusted so it does not override the      
+classes did not match    | mobile off-canvas position. A responsive patch was prepared; final       
+CSS selectors.           | verification depends on the latest local build.                          
+Support Assistant needed | The local FAQ answer path provides in-app help when no external provider 
+to work without a paid   | is configured. The user later confirmed the Support Assistant was working
+API dependency.          | well.                                                                    
+
+
+12.1 Confirmed test outcomes
+============================
+• Deactivated Employee session rejected on protected API request – Passed.
+• Last active Admin could not be deactivated or demoted – Passed.
+• Manager could view tickets created by or assigned to direct reports – Passed.
+• Employee A could not access unrelated Employee B's tickets, including related comments,
+  attachments, status or resolution operations – Passed.
+• Manager could not assign tickets to unrelated employees, teams or another Manager – Passed.
+• Notification workflow covering ticket creation, assignment, start-work/resolution, unread/read
+  behaviour and employee isolation – Passed.
+• Reporting hierarchy and the remaining Department/Team Management, Reports/Analytics, Settings and
+  Profile audit checks were not all explicitly confirmed in the recorded test results. They should
+  not be represented as independently signed off.
+
+13. SECURITY AND CONFIGURATION
+==============================
+Application configuration is read from environment variables loaded by python-dotenv. The
+application requires FLASK_SECRET_KEY and refuses to start if it is missing. Database connection
+values are supplied through DB_HOST, DB_PORT, DB_USER, DB_PASSWORD and DB_NAME. The configuration
+sets HTTPOnly and SameSite=Lax session cookies, an eight-hour permanent session lifetime, and a
+configurable secure-cookie flag.
+
+The project archive contains local configuration material. Credentials, secret keys and other
+environment-specific values are intentionally not reproduced in this handover document. Production
+deployment should use a managed secret store or protected environment configuration and should never
+publish .env files.
+
+• Set a strong, unique FLASK_SECRET_KEY outside source control.
+• Use a least-privilege MySQL account and restrict database network access.
+• Enable COOKIE_SECURE=true behind HTTPS in production.
+• Keep Flask debug mode disabled in production.
+• Use a production WSGI server and a properly configured reverse proxy.
+• Back up the MySQL database and the ticket upload directory; test restoration procedures.
+• Review upload size/type controls and access permissions for stored files.
+• Review CSRF protection and origin controls for cookie-authenticated state-changing requests before
+  public production exposure.
+• Use monitoring and log retention appropriate to the organisation's operational requirements.
+
+14. TESTING AND ACCEPTANCE
+==========================
+Testing should cover each role independently and should verify both successful operations and
+prohibited access. A page that hides a button is not sufficient evidence of access control; the
+corresponding API must also reject the request.
+
+Recommended end-to-end acceptance sequence:
+
+• Create or verify one Admin, one Manager reporting to the Admin, and multiple Employees reporting
+  to the Manager.
+• Sign in with each role and verify the dashboard and navigation available to that role.
+• Create a ticket as an Employee and confirm the ticket number, database record and creator/manager
+  notifications.
+• Assign the ticket to an eligible employee or managed team as Manager; verify that unrelated
+  assignments are rejected.
+• Sign in as the assigned Employee, start work, add a comment and submit a valid resolution summary.
+• Verify the creator receives notifications and can see the updated ticket state and resolution.
+• Attempt to access another employee's ticket, detail, attachment, comment or mutation endpoint and
+  verify denial.
+• Deactivate a test account while its session is active and verify the next protected API request
+  rejects it.
+• Verify last-active-Admin protections and reporting relationships.
+• Verify department/team/user CRUD, reporting filters, profile updates, password change and
+  notification read/dismiss actions.
+• Test mobile navigation, layout at narrow viewport widths, theme persistence and Support Assistant
+  fallback behaviour.
+
+15. KNOWN IMPLEMENTATION NOTES AND LIMITATIONS
+==============================================
+• Settings preferences are currently browser-local; the system_settings table exists but the
+  Settings page does not persist those controls through a dedicated settings API.
+• The Support Assistant includes a built-in FAQ fallback. An optional external model path exists in
+  the backend and is not required for the FAQ experience.
+• The activity_logs table is part of the schema, but the reviewed route set does not demonstrate a
+  complete application-wide audit log write path.
+• The current API set is implemented in the Flask route modules listed in this document; any feature
+  not represented by an implemented route should not be described as a live backend capability.
+• Some test areas were not explicitly confirmed in the recorded outcomes. They are listed in the
+  acceptance section rather than marked as passed.
+
+16. PROJECT HANDOVER AND MAINTENANCE
+====================================
+The project is organised so that page presentation, API behaviour and database persistence can be
+maintained independently. Frontend changes should continue to use the shared API helper and global
+behaviour where appropriate. Backend changes should retain the common authentication decorators,
+role-scoped query rules, parameterised SQL and transaction handling.
+
+Database changes should be delivered as controlled migration scripts and should preserve existing
+records. Before changing a role rule, ticket scope or foreign-key relationship, review the effect on
+all three perspectives and the related APIs.
+
+For future enhancements, update this document's API catalogue, role matrix, database description and
+test outcomes whenever a route, permission or persisted workflow changes.
+
+
+17. CONCLUSION
+==============
+Climentos Work Management Platform brings employee requests, team coordination and administrative
+control into one role-based workflow. The current implementation includes a Flask and MySQL backend,
+persistent ticket operations, account and department administration, team management, scoped
+reporting, notifications, profile management and in-app support guidance.
+
+The most important operational principle is that the server remains the authority for identity, role
+and record access. Continued maintenance should preserve this rule while extending the platform's
+functionality and completing the remaining acceptance checks.
+
+
+END OF DOCUMENT

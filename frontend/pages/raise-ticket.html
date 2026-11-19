@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Raise a new ticket - Climentos Work Management Platform">
+
+    <title>Raise Ticket | Climentos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Reuse dashboard layout -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/tickets.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+
+            <a href="dashboard.html" class="brand-logo">
+                <span class="logo-symbol">C</span>
+                <span class="brand-name">climentos<span>.</span></span>
+            </a>
+
+            <div class="workspace-label">WORKSPACE</div>
+
+            <nav class="sidebar-nav" id="roleNavigation">
+                <a href="dashboard.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">▦</span><span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="EMPLOYEE,MANAGER">TICKETS</div>
+                <a href="raise-ticket.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">＋</span><span>Raise Ticket</span>
+                </a>
+                <a href="my-tickets.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">▤</span><span>My Tickets</span>
+                </a>
+                <a href="all-tickets.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">▣</span><span>All Tickets</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="MANAGER,ADMIN">WORKSPACE</div>
+                <a href="team-management.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">♧</span><span>Team Management</span>
+                </a>
+                <a href="reports.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">◷</span><span>Reports &amp; Analytics</span>
+                </a>
+
+                <!-- Admin only links -->
+                <a href="user-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">♙</span><span>User Management</span>
+                </a>
+                <a href="department-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">▥</span><span>Department Management</span>
+                </a>
+                <a href="settings.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">⚙</span><span>Settings</span>
+                </a>
+
+                <div class="nav-section-label">ACCOUNT</div>
+                <a href="employee-profile.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♙</span><span>My Profile</span>
+                </a>
+                <a href="notifications.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♢</span><span>Notifications</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="help-card">
+                    <div class="help-icon">✦</div>
+                    <strong>Need assistance?</strong>
+                    <p>Our team is here to help you.</p>
+                    <a href="#">Get support →</a>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="user-avatar js-user-avatar user-initial">S</div>
+                    <div class="user-info">
+                        <strong class="js-user-name user-name">Sharath Kumar</strong>
+                        <span class="js-user-role user-role">Employee</span>
+                    </div>
+                    <button class="logout-button js-logout" title="Logout" aria-label="Logout">↗</button>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOP NAVIGATION -->
+            <header class="topbar">
+
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+
+                    <div class="breadcrumb">
+                        Workspace <span>/</span>
+                        Tickets <span>/</span>
+                        <strong>Raise Ticket</strong>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input type="search" id="ticketSearch" placeholder="Search anything...">
+                        <kbd>⌘ K</kbd>
+                    </div>
+
+                    <button class="icon-button" id="notificationButton" aria-label="Notifications">♧
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <button class="icon-button" id="themeToggle" aria-label="Switch theme">
+                        <span id="themeIcon">☾</span>
+                    </button>
+
+                    <div class="profile-menu">
+
+                        <button type="button" class="top-user" id="profileMenuTrigger" aria-expanded="false"
+                            aria-controls="profileDropdown" aria-haspopup="true">
+
+                            <div class="user-avatar user-initial">S</div>
+
+                            <div class="user-info">
+                                <strong class="user-name">Sharath Kumar</strong>
+                                <span class="user-role">Employee</span>
+                            </div>
+
+                        </button>
+
+                        <div class="profile-dropdown" id="profileDropdown">
+
+                            <button type="button" class="dropdown-logout js-logout">
+                                <span aria-hidden="true">↪</span>
+                                Logout
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="ticket-page-content">
+
+                <section class="ticket-page-heading">
+
+                    <div>
+                        <div class="page-eyebrow">TICKET MANAGEMENT · <span id="currentRoleLabel">EMPLOYEE</span></div>
+
+                        <h1>Raise a Ticket <span>✦</span></h1>
+
+                        <p>
+                            Tell us what you need help with.
+                            We'll make sure it reaches the right team.
+                        </p>
+                    </div>
+
+                    <a href="dashboard.html" class="back-button">
+                        ← Back to Dashboard
+                    </a>
+
+                </section>
+
+                <!-- INFORMATION BANNER -->
+                <div class="ticket-info-banner">
+                    <div class="banner-icon">✦</div>
+
+                    <div>
+                        <strong>We're here to help!</strong>
+                        <p>
+                            Provide accurate details so our team can
+                            understand and resolve your request faster.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="ticket-layout">
+
+                    <!-- MAIN FORM -->
+                    <section class="ticket-form-card">
+
+                        <div class="form-card-heading">
+                            <div>
+                                <h2>Ticket Information</h2>
+                                <p>Fields marked with * are required.</p>
+                            </div>
+
+                            <span class="form-step">01 / 01</span>
+                        </div>
+
+                        <form id="raiseTicketForm" novalidate>
+
+                            <!-- TITLE -->
+                            <div class="ticket-form-group">
+                                <label for="ticketTitle">
+                                    Ticket Title <span>*</span>
+                                </label>
+
+                                <input type="text" id="ticketTitle" name="title"
+                                    placeholder="Enter a short title for your ticket" maxlength="150" required>
+
+                                <div class="field-meta">
+                                    <small class="field-error" id="titleError"></small>
+                                    <small id="titleCount">0 / 150</small>
+                                </div>
+                            </div>
+
+                            <!-- DESCRIPTION -->
+                            <div class="ticket-form-group">
+                                <label for="ticketDescription">
+                                    Description <span>*</span>
+                                </label>
+
+                                <textarea id="ticketDescription" name="description" rows="6" maxlength="2000"
+                                    placeholder="Explain your request in detail. Include any relevant information that can help our team..."
+                                    required></textarea>
+
+                                <div class="field-meta">
+                                    <small class="field-error" id="descriptionError"></small>
+                                    <small id="descriptionCount">0 / 2000</small>
+                                </div>
+                            </div>
+
+                            <!-- CATEGORY AND DEPARTMENT -->
+                            <div class="form-two-columns">
+
+                                <div class="ticket-form-group">
+                                    <label for="ticketCategory">
+                                        Ticket Category <span>*</span>
+                                    </label>
+
+                                    <select id="ticketCategory" name="category" required>
+                                        <option value="">Select category</option>
+                                        <option value="IT Support">IT Support</option>
+                                        <option value="Hardware">Hardware</option>
+                                        <option value="Software">Software</option>
+                                        <option value="Network">Network</option>
+                                        <option value="HR">Human Resources</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Administration">Administration</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+
+                                    <small class="field-error" id="categoryError"></small>
+                                </div>
+
+                                <div class="ticket-form-group">
+                                    <label for="ticketDepartment">
+                                        Department <span>*</span>
+                                    </label>
+
+                                    <select id="ticketDepartment" name="department_id" required>
+                                        <option value="">Loading departments...</option>
+                                    </select>
+
+                                    <small class="field-error" id="departmentError"></small>
+                                </div>
+
+                            </div>
+
+                            <!-- PRIORITY -->
+                            <div class="ticket-form-group">
+                                <label for="ticketPriority">
+                                    Priority Level <span>*</span>
+                                </label>
+
+                                <select id="ticketPriority" name="priority" required>
+                                    <option value="">Select priority</option>
+                                    <option value="LOW">Low - Can be handled later</option>
+                                    <option value="MEDIUM">Medium - Normal attention</option>
+                                    <option value="HIGH">High - Needs quick attention</option>
+                                    <option value="URGENT">Critical - Urgent attention</option>
+                                </select>
+
+                                <small class="field-error" id="priorityError"></small>
+                            </div>
+
+                            <!-- ATTACHMENT -->
+                            <div class="ticket-form-group">
+
+                                <label for="ticketAttachment">
+                                    Attachments
+                                    <span class="optional-label">Optional</span>
+                                </label>
+
+                                <label class="upload-area" for="ticketAttachment">
+
+                                    <input type="file" id="ticketAttachment" name="attachment"
+                                        accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.txt">
+
+                                    <span class="upload-icon">⇧</span>
+
+                                    <strong>Click to upload a file</strong>
+
+                                    <span>
+                                        PDF, PNG, JPG, DOC, DOCX or TXT
+                                        · Maximum 5 MB
+                                    </span>
+
+                                </label>
+
+                                <div id="attachmentPreview" class="attachment-preview"></div>
+
+                                <small class="field-error" id="attachmentError"></small>
+                            </div>
+
+                            <!-- SUBMIT BUTTONS -->
+                            <div class="form-actions">
+
+                                <a href="dashboard.html" class="cancel-button">
+                                    Cancel
+                                </a>
+
+                                <button type="submit" class="submit-ticket-button" id="submitTicketButton">
+                                    <span id="submitButtonText">Submit Ticket</span>
+                                    <span>→</span>
+                                </button>
+
+                            </div>
+
+                            <div class="submission-message" id="submissionMessage" role="status" aria-live="polite">
+                            </div>
+
+                        </form>
+
+                    </section>
+
+                    <!-- SIDE INFORMATION -->
+                    <aside class="ticket-side-panel">
+
+                        <div class="side-info-card">
+                            <div class="side-info-icon">◷</div>
+                            <h3>What happens next?</h3>
+
+                            <div class="process-list">
+
+                                <div class="process-item">
+                                    <span class="process-number">1</span>
+                                    <div>
+                                        <strong>Ticket Submitted</strong>
+                                        <p>Your ticket is registered.</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-item">
+                                    <span class="process-number">2</span>
+                                    <div>
+                                        <strong>Ticket Assignment</strong>
+                                        <p>The appropriate team receives it.</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-item">
+                                    <span class="process-number">3</span>
+                                    <div>
+                                        <strong>Work in Progress</strong>
+                                        <p>The assigned team works on it.</p>
+                                    </div>
+                                </div>
+
+                                <div class="process-item">
+                                    <span class="process-number">4</span>
+                                    <div>
+                                        <strong>Ticket Resolved</strong>
+                                        <p>You receive the resolution update.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="side-tip-card">
+                            <div class="tip-icon">✧</div>
+                            <h3>Helpful tip</h3>
+                            <p>
+                                A clear title, detailed description,
+                                and relevant attachments can help
+                                the team resolve your ticket faster.
+                            </p>
+                        </div>
+
+                    </aside>
+
+                </div>
+
+                <footer class="ticket-footer">
+                    © 2026 Climentos Work Management Platform
+                    <span>Designed for better teamwork.</span>
+                </footer>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/tickets.js"></script>
+    <script src="../js/global.js"></script>
+
+
+</body>
+
+</html>

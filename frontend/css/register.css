@@ -1,0 +1,146 @@
+/* CLIMENTOS WMP - EMPLOYEE REGISTRATION */
+.register-page {
+  min-height: 100vh;
+}
+.register-form-panel {
+  justify-content: flex-start;
+}
+.register-container {
+  max-width: 540px;
+  margin: 26px auto 20px;
+}
+.register-heading {
+  margin-bottom: 22px;
+}
+.register-heading h2 {
+  margin-top: 14px;
+}
+.register-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+}
+.register-grid .form-group {
+  margin-bottom: 13px;
+}
+.register-grid .form-group label {
+  margin-bottom: 7px;
+}
+.register-grid .input-wrapper {
+  min-height: 47px;
+  gap: 9px;
+  padding: 0 11px;
+}
+.register-grid .input-wrapper input,
+.register-grid .input-wrapper select {
+  height: 45px;
+  font-size: 11px;
+}
+.register-grid .input-icon {
+  font-size: 15px;
+}
+.register-grid select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.register-grid select:invalid {
+  color: var(--muted);
+}
+.register-grid select option {
+  color: #20223a;
+}
+.register-options {
+  margin: 7px 0 5px;
+}
+.register-options .remember-option {
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.register-options .custom-checkbox {
+  flex: 0 0 16px;
+  margin-top: 1px;
+}
+.terms-error {
+  margin: 0 0 8px;
+}
+.register-container .login-button {
+  min-height: 49px;
+}
+.register-container .security-note {
+  margin-top: 17px;
+}
+.register-container .signup-note {
+  margin-top: 14px;
+}
+.register-admin-note {
+  margin: 12px auto 0;
+  max-width: 450px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.6;
+  text-align: center;
+}
+.register-form-panel .form-footer {
+  margin-top: auto;
+  padding-top: 12px;
+}
+body.dark-theme .register-grid select {
+  color: var(--text);
+}
+body.dark-theme .register-grid select option {
+  background: #20243a;
+  color: #f2f2fa;
+}
+@media (min-width: 701px) {
+  .register-page {
+    min-height: 720px;
+    height: auto;
+    overflow: visible;
+  }
+  .register-page .brand-panel {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  .register-form-panel {
+    min-height: 100vh;
+    height: auto;
+  }
+  .register-container {
+    margin-top: 24px;
+    margin-bottom: 18px;
+  }
+}
+@media (max-width: 950px) and (min-width: 701px) {
+  .register-grid {
+    grid-template-columns: 1fr;
+  }
+  .register-container {
+    max-width: 430px;
+  }
+}
+@media (max-width: 700px) {
+  .register-form-panel {
+    min-height: 100vh;
+  }
+  .register-container {
+    margin: 22px auto;
+  }
+  .register-container .mobile-brand {
+    margin-bottom: 28px;
+  }
+  .register-grid {
+    grid-template-columns: 1fr;
+  }
+  .register-grid .form-group {
+    margin-bottom: 12px;
+  }
+  .register-admin-note {
+    font-size: 9px;
+  }
+}

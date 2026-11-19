@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to Climentos Work Management Platform">
+    <title>Login | Climentos Work Management Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+
+<body>
+    <main class="login-page">
+
+        <!-- LEFT: BRAND AND CREATIVE PANEL -->
+        <section class="brand-panel">
+            <div class="brand-top">
+                <a href="../index.html" class="brand-logo" aria-label="Climentos home">
+                    <span class="logo-symbol">C</span>
+                    <span class="brand-name">climentos<span>.</span></span>
+                </a>
+
+                <span class="brand-label">WORK MANAGEMENT PLATFORM</span>
+            </div>
+
+            <div class="brand-content">
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    ONE WORKSPACE. EVERY POSSIBILITY.
+                </div>
+
+                <h1>
+                    Work smarter.<br>
+                    Move <span>forward.</span>
+                </h1>
+
+                <p class="brand-description">
+                    Bring your people, tickets, and work together.
+                    Stay organized, collaborate effortlessly, and
+                    turn every task into progress.
+                </p>
+
+                <div class="visual-area" aria-hidden="true">
+                    <div class="visual-glow"></div>
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+
+                    <div class="floating-card card-back">
+                        <div class="mini-card-top">
+                            <span class="mini-icon purple">✓</span>
+                            <span>Task completed</span>
+                        </div>
+                        <div class="mini-line long"></div>
+                        <div class="mini-line short"></div>
+                    </div>
+
+                    <div class="floating-card card-main">
+                        <div class="task-heading">
+                            <span class="task-icon">✦</span>
+                            <span>Workspace overview</span>
+                            <span class="task-menu">•••</span>
+                        </div>
+
+                        <div class="task-number">Your work, in motion.</div>
+
+                        <div class="progress-track">
+                            <div class="progress-fill"></div>
+                        </div>
+
+                        <div class="progress-info">
+                            <span>Team progress</span>
+                            <strong>78%</strong>
+                        </div>
+
+                        <div class="avatar-row">
+                            <span class="avatar avatar-a">A</span>
+                            <span class="avatar avatar-b">S</span>
+                            <span class="avatar avatar-c">M</span>
+                            <span class="avatar avatar-more">+4</span>
+                            <span class="team-label">Your team</span>
+                        </div>
+                    </div>
+
+                    <div class="floating-card card-front">
+                        <span class="live-dot"></span>
+                        <span>Everything on track</span>
+                        <span class="sparkle">✧</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                <span>© 2026 Climentos</span>
+                <span>Built for better teamwork.</span>
+            </div>
+        </section>
+
+        <!-- RIGHT: LOGIN FORM -->
+        <section class="form-panel">
+
+            <header class="form-header">
+                <span class="welcome-small">WELCOME BACK</span>
+
+                <div class="login-header-actions">
+                    <div class="role-picker" id="rolePicker">
+                        <button type="button" class="role-picker-trigger" id="rolePickerTrigger"
+                            aria-label="Select account role" aria-haspopup="true" aria-expanded="false"
+                            aria-controls="rolePickerMenu" title="Select account role">
+                            <span class="role-picker-user-icon" aria-hidden="true">♙</span>
+                            <span class="role-picker-current" id="rolePickerCurrent">Employee</span>
+                            <span class="role-picker-chevron" aria-hidden="true">▾</span>
+                        </button>
+
+                        <div class="role-picker-menu" id="rolePickerMenu" hidden>
+                            <button type="button" class="role-picker-option selected" data-role="EMPLOYEE"
+                                aria-pressed="true">
+                                <span class="role-option-icon">♙</span>
+                                <span>Employee</span>
+                                <span class="role-option-check">✓</span>
+                            </button>
+                            <button type="button" class="role-picker-option" data-role="MANAGER" aria-pressed="false">
+                                <span class="role-option-icon">♧</span>
+                                <span>Manager</span>
+                                <span class="role-option-check">✓</span>
+                            </button>
+                            <button type="button" class="role-picker-option" data-role="ADMIN" aria-pressed="false">
+                                <span class="role-option-icon">⚙</span>
+                                <span>Admin</span>
+                                <span class="role-option-check">✓</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch color theme"
+                        title="Switch theme">
+                        <span id="themeIcon">☾</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="form-container">
+                <div class="mobile-brand">
+                    <span class="logo-symbol">C</span>
+                    <span class="brand-name">climentos<span>.</span></span>
+                </div>
+
+                <div class="form-heading">
+                    <div class="heading-icon">✦</div>
+                    <h2>Welcome back!</h2>
+                    <p>Enter your details to access your workspace.</p>
+                </div>
+
+                <form id="loginForm" novalidate>
+
+                    <!-- EMAIL -->
+                    <div class="form-group">
+                        <label for="email">Work email</label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon" aria-hidden="true">✉</span>
+                            <input type="email" id="email" name="email" placeholder="name@company.com"
+                                autocomplete="username" required>
+                        </div>
+                        <small class="field-error" id="emailError"></small>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                            <a href="#" class="text-link" id="forgotLink">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon" aria-hidden="true">⌑</span>
+
+                            <input type="password" id="password" name="password" placeholder="Enter your password"
+                                autocomplete="current-password" required>
+
+                            <button type="button" class="password-toggle" id="passwordToggle"
+                                aria-label="Show password">
+                                Show
+                            </button>
+                        </div>
+                        <small class="field-error" id="passwordError"></small>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-option">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="custom-checkbox"></span>
+                            <span>Remember me</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="login-button" id="loginButton">
+                        <span id="buttonText">Sign in to workspace</span>
+                        <span class="button-arrow">→</span>
+                    </button>
+
+                    <div class="form-message" id="formMessage" role="status" aria-live="polite"></div>
+                </form>
+
+                <div class="security-note">
+                    <span class="security-icon">◇</span>
+                    Your workspace is protected and secure.
+                </div>
+
+                <p class="signup-note">
+                    New employee?
+                    <a href="register.html">Create an account</a>
+                </p>
+
+                <p class="signup-note">
+                    Need access to your workspace?
+                    <a href="#" id="accessLink">Contact your administrator</a>
+                </p>
+            </div>
+
+            <footer class="form-footer">
+                <span>Climentos Work Management Platform</span>
+                <span>Version 1.0</span>
+            </footer>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </section>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/login.js"></script>
+
+</body>
+
+</html>

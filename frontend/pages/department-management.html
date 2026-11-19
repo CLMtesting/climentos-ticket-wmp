@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Department Management - Climentos Work Management Platform">
+    <title>Department Management | Climentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/department-management.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <a href="dashboard.html" class="brand-logo"><span class="logo-symbol">C</span><span
+                    class="brand-name">climentos<span>.</span></span></a>
+            <div class="workspace-label">WORKSPACE</div>
+            <nav class="sidebar-nav" id="roleNavigation">
+                <a href="dashboard.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">▦</span><span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="EMPLOYEE,MANAGER">TICKETS</div>
+                <a href="raise-ticket.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">＋</span><span>Raise Ticket</span>
+                </a>
+                <a href="my-tickets.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">▤</span><span>My Tickets</span>
+                </a>
+                <a href="all-tickets.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">▣</span><span>All Tickets</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="MANAGER,ADMIN">WORKSPACE</div>
+                <a href="team-management.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">♧</span><span>Team Management</span>
+                </a>
+                <a href="reports.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">◷</span><span>Reports &amp; Analytics</span>
+                </a>
+
+                <!-- Admin only links -->
+                <a href="user-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">♙</span><span>User Management</span>
+                </a>
+                <a href="department-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">▥</span><span>Department Management</span>
+                </a>
+                <a href="settings.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">⚙</span><span>Settings</span>
+                </a>
+
+                <div class="nav-section-label">ACCOUNT</div>
+                <a href="employee-profile.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♙</span><span>My Profile</span>
+                </a>
+                <a href="notifications.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♢</span><span>Notifications</span>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <div class="help-icon">✦</div><strong>Need assistance?</strong>
+                    <p>Our team is here to help you.</p><a href="#">Get support →</a>
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar js-user-avatar user-initial">S</div>
+                    <div class="user-info">
+                        <strong class="js-user-name user-name">Sharath Kumar</strong>
+                        <span class="js-user-role user-role">Employee</span>
+                    </div>
+                    <button class="logout-button js-logout" title="Logout" aria-label="Logout">↗</button>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left"><button class="menu-toggle" id="menuToggle"
+                        aria-label="Toggle sidebar">☰</button>
+                    <div class="breadcrumb">Workspace <span>/</span> <strong>Department Management</strong></div>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-box"><span>⌕</span><input type="search" id="globalSearch"
+                            placeholder="Search departments..." aria-label="Search departments"><kbd>⌘ K</kbd></div>
+                    <button class="icon-button" id="themeToggle" aria-label="Switch theme"><span
+                            id="themeIcon">☾</span></button>
+
+                    <div class="profile-menu">
+                        <button type="button" class="top-user" id="profileMenuTrigger" aria-expanded="false"
+                            aria-controls="profileDropdown" aria-haspopup="true">
+
+                            <div class="user-avatar js-user-avatar user-initial">S</div>
+
+                            <div class="user-info">
+                                <strong class="js-user-name user-name">Sharath Kumar</strong>
+                                <span class="js-user-role user-role">Admin</span>
+                            </div>
+                        </button>
+
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <button type="button" class="dropdown-logout logout-button" id="logoutButton">
+                                <span aria-hidden="true">↪</span>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <div class="departments-content">
+                <section class="departments-heading">
+                    <div>
+                        <div class="page-eyebrow">ORGANIZATION STRUCTURE</div>
+                        <h1>Department Management <span>✦</span></h1>
+                        <p>Create departments, assign managers and organize your workspace.</p>
+                    </div><button class="department-primary-button" id="addDepartmentButton" type="button">＋ Add
+                        Department</button>
+                </section>
+                <section class="department-stats">
+                    <article class="department-stat">
+                        <div class="department-stat-top"><span>Total Departments</span><span
+                                class="stat-icon purple">▥</span></div><strong
+                            id="totalDepartments">0</strong><small>Across the organization</small>
+                    </article>
+                    <article class="department-stat">
+                        <div class="department-stat-top"><span>Active Departments</span><span
+                                class="stat-icon green">✓</span></div><strong
+                            id="activeDepartments">0</strong><small>Currently operating</small>
+                    </article>
+                    <article class="department-stat">
+                        <div class="department-stat-top"><span>Total Members</span><span class="stat-icon blue">♙</span>
+                        </div><strong id="totalDepartmentMembers">0</strong><small>Assigned to departments</small>
+                    </article>
+                    <article class="department-stat">
+                        <div class="department-stat-top"><span>Assigned Managers</span><span
+                                class="stat-icon orange">♧</span></div><strong
+                            id="assignedManagers">0</strong><small>Department leadership</small>
+                    </article>
+                </section>
+                <section class="departments-panel">
+                    <div class="departments-panel-heading">
+                        <div>
+                            <h2>Organization Departments</h2>
+                            <p>Manage department details and leadership assignments.</p>
+                        </div><span class="departments-count" id="departmentCount">0 departments</span>
+                    </div>
+                    <div class="departments-toolbar"><label class="department-search"><span>⌕</span><input
+                                id="departmentSearch" type="search"
+                                placeholder="Search department or manager..."></label>
+                        <select id="departmentStatusFilter" aria-label="Filter by status">
+                            <option value="">All statuses</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                        <button type="button" id="clearDepartmentFilters" class="department-clear-button">Clear
+                            filters</button>
+                    </div>
+                    <div class="departments-table-wrap">
+                        <table class="departments-table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Database ID</th>
+                                    <th>Manager</th>
+                                    <th>Members</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departmentsTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="departments-empty" id="departmentsEmpty" hidden>
+                        <div class="empty-department-icon">▥</div>
+                        <h3>No departments found</h3>
+                        <p>Try changing your search or filters.</p><button type="button"
+                            id="resetDepartmentFilters">Clear filters</button>
+                    </div>
+                    <div class="departments-footer"><span id="departmentPaginationInfo">Showing 0 departments</span>
+                        <div><button type="button" id="previousDepartmentPage">Previous</button><span
+                                id="departmentPageNumber">1 / 1</span><button type="button"
+                                id="nextDepartmentPage">Next</button></div>
+                    </div>
+                </section>
+                <p class="department-demo-note">Department records and member counts are loaded from MySQL. Department
+                    leadership is represented by active team managers assigned through Team Management, because the
+                    current database schema has no direct department-manager column.</p>
+            </div>
+        </main>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="department-modal" id="departmentModal" aria-hidden="true">
+        <div class="department-modal-card" role="dialog" aria-modal="true" aria-labelledby="departmentModalTitle">
+            <div class="department-modal-heading">
+                <div>
+                    <div class="page-eyebrow">DEPARTMENT DETAILS</div>
+                    <h2 id="departmentModalTitle">Add Department</h2>
+                </div><button type="button" id="closeDepartmentModal" aria-label="Close">×</button>
+            </div>
+            <form id="departmentForm">
+                <div class="department-form-grid">
+                    <label>Department name<input id="departmentName" required maxlength="80"
+                            placeholder="e.g. Engineering"></label>
+                    <label>Department status<select id="departmentStatus">
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select></label>
+                    <label class="full-width">Description<textarea id="departmentDescription" rows="3" maxlength="250"
+                            placeholder="Briefly describe this department..."></textarea></label>
+                </div>
+                <p class="department-form-message" id="departmentFormMessage" role="status">Changes are saved directly
+                    to the organization database.</p>
+                <div class="department-modal-actions"><button type="button" id="cancelDepartmentModal"
+                        class="department-cancel-button">Cancel</button><button type="submit"
+                        class="department-save-button" id="saveDepartmentButton">Add Department</button></div>
+            </form>
+        </div>
+    </div>
+    <div class="department-modal" id="departmentDetailsModal" aria-hidden="true">
+        <div class="department-modal-card department-details-card" role="dialog" aria-modal="true"
+            aria-labelledby="detailsDepartmentName">
+            <div class="department-modal-heading">
+                <div>
+                    <div class="page-eyebrow">DEPARTMENT OVERVIEW</div>
+                    <h2 id="detailsDepartmentName">Department</h2>
+                </div><button type="button" id="closeDepartmentDetails" aria-label="Close">×</button>
+            </div>
+            <div class="department-details-grid">
+                <div><small>Department ID</small><strong id="detailsDepartmentId">—</strong></div>
+                <div><small>Manager</small><strong id="detailsDepartmentManager">—</strong></div>
+                <div><small>Members</small><strong id="detailsDepartmentMembers">—</strong></div>
+                <div><small>Status</small><strong id="detailsDepartmentStatus">—</strong></div>
+                <div class="full-width"><small>Description</small><strong id="detailsDepartmentDescription">—</strong>
+                </div>
+            </div>
+            <div class="department-modal-actions"><button type="button" id="closeDepartmentDetailsButton"
+                    class="department-cancel-button">Close</button></div>
+        </div>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/department-management.js"></script>
+    <script src="../js/global.js"></script>
+
+</body>
+
+</html>

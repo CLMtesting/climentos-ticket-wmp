@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reports and Analytics - Climentos Work Management Platform">
+    <title>Reports & Analytics | Climentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/reports.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <a href="dashboard.html" class="brand-logo"><span class="logo-symbol">C</span><span
+                    class="brand-name">climentos<span>.</span></span></a>
+            <div class="workspace-label">WORKSPACE</div>
+            <nav class="sidebar-nav" id="roleNavigation">
+                <a href="dashboard.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">▦</span><span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="EMPLOYEE,MANAGER">TICKETS</div>
+                <a href="raise-ticket.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">＋</span><span>Raise Ticket</span>
+                </a>
+                <a href="my-tickets.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">▤</span><span>My Tickets</span>
+                </a>
+                <a href="all-tickets.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">▣</span><span>All Tickets</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="MANAGER,ADMIN">WORKSPACE</div>
+                <a href="team-management.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">♧</span><span>Team Management</span>
+                </a>
+                <a href="reports.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">◷</span><span>Reports &amp; Analytics</span>
+                </a>
+
+                <!-- Admin only links -->
+                <a href="user-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">♙</span><span>User Management</span>
+                </a>
+                <a href="department-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">▥</span><span>Department Management</span>
+                </a>
+                <a href="settings.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">⚙</span><span>Settings</span>
+                </a>
+
+                <div class="nav-section-label">ACCOUNT</div>
+                <a href="employee-profile.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♙</span><span>My Profile</span>
+                </a>
+                <a href="notifications.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♢</span><span>Notifications</span>
+                </a>
+
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <div class="help-icon">✦</div><strong>Need assistance?</strong>
+                    <p>Our team is here to help you.</p><a href="#">Get support →</a>
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar js-user-avatar user-initial">S</div>
+                    <div class="user-info">
+                        <strong class="js-user-name user-name">Sharath Kumar</strong>
+                        <span class="js-user-role user-role">Employee</span>
+                    </div>
+                    <button class="logout-button js-logout" title="Logout" aria-label="Logout">↗</button>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left"><button class="menu-toggle" id="menuToggle"
+                        aria-label="Toggle sidebar">☰</button>
+                    <div class="breadcrumb">Workspace <span>/</span><strong>Reports & Analytics</strong></div>
+                </div>
+                <div class="topbar-right">
+                    <div class="search-box"><span>⌕</span><input type="search" id="globalSearch"
+                            placeholder="Search anything..."><kbd>⌘ K</kbd></div>
+                    <button class="icon-button" id="notificationButton" aria-label="Notifications">♧<span
+                            class="notification-dot"></span></button>
+                    <button class="icon-button" id="themeToggle" aria-label="Switch theme"><span
+                            id="themeIcon">☾</span></button>
+
+                    <div class="profile-menu">
+                        <button type="button" class="top-user" id="profileMenuTrigger" aria-expanded="false"
+                            aria-controls="profileDropdown" aria-haspopup="true">
+
+                            <div class="user-avatar js-user-avatar user-initial">S</div>
+
+                            <div class="user-info">
+                                <strong class="js-user-name user-name">Sharath Kumar</strong>
+                                <span class="js-user-role user-role">Admin</span>
+                            </div>
+                        </button>
+
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <button type="button" class="dropdown-logout logout-button" id="logoutButton">
+                                <span aria-hidden="true">↪</span>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+            <div class="reports-content">
+                <section class="reports-heading">
+                    <div>
+                        <div class="page-eyebrow">WORKSPACE INSIGHTS</div>
+                        <h1 id="reportsPageTitle">Reports & <span>Analytics</span></h1>
+                        <p id="reportsPageSubtitle">Understand ticket activity, team performance and resolution trends.
+                        </p>
+                    </div><button type="button" class="export-button" id="exportReport"><span>⇩</span> Export
+                        report</button>
+                </section>
+                <section class="report-toolbar">
+                    <div><label for="periodFilter">Reporting period</label><select id="periodFilter">
+                            <option value="30">Last 30 days</option>
+                            <option value="7">Last 7 days</option>
+                            <option value="90">Last 90 days</option>
+                            <option value="all">All time</option>
+                        </select></div>
+                    <div><label for="departmentFilter">Department</label><select id="departmentFilter">
+                            <option value="">All departments</option>
+
+                        </select></div><span class="report-updated"><i></i> Loading live database data...</span>
+                </section>
+                <p id="reportsMessage" role="status" style="margin:10px 0;color:var(--muted);font-size:12px;"></p>
+                <section class="report-stats-grid">
+                    <article class="report-stat-card">
+                        <div>Total tickets <b class="stat-icon purple">▤</b></div><strong
+                            id="totalTickets">0</strong><small>Based on selected reporting period</small>
+                    </article>
+                    <article class="report-stat-card">
+                        <div>Resolved tickets <b class="stat-icon green">✓</b></div><strong
+                            id="resolvedTickets">0</strong><small>Resolved or closed</small>
+                    </article>
+                    <article class="report-stat-card">
+                        <div>Open tickets <b class="stat-icon orange">◷</b></div><strong
+                            id="openTickets">0</strong><small>Currently open</small>
+                    </article>
+                    <article class="report-stat-card">
+                        <div>Resolution rate <b class="stat-icon blue">↗</b></div><strong
+                            id="resolutionRate">0%</strong><small>Resolved and closed / total</small>
+                    </article>
+                </section>
+                <section class="report-grid">
+                    <article class="report-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Ticket volume trend</h2>
+                                <p>Tickets created and resolved over time</p>
+                            </div><span class="chip" id="trendChip">Activity</span>
+                        </div>
+                        <div class="legend"><span><i class="created"></i> Created</span><span><i class="resolved"></i>
+                                Resolved</span></div>
+                        <div class="trend-chart"><svg id="trendChart" viewBox="0 0 700 230" role="img"
+                                aria-label="Ticket volume trend chart"></svg></div>
+                        <div class="axis-labels" id="trendAxisLabels"></div>
+                    </article>
+                    <article class="report-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Tickets by status</h2>
+                                <p>Current ticket distribution</p>
+                            </div>
+                        </div>
+                        <div class="donut-wrap">
+                            <div class="donut" id="statusDonut">
+                                <div><strong id="donutTotal">0</strong><small>Total tickets</small></div>
+                            </div>
+                        </div>
+                        <div class="status-legend">
+                            <p><span><i class="open"></i> Open</span><b id="legendOpen">0 (0%)</b></p>
+                            <p><span><i class="progress"></i> In Progress</span><b id="legendProgress">0 (0%)</b></p>
+                            <p><span><i class="hold"></i> On Hold</span><b id="legendHold">0 (0%)</b></p>
+                            <p><span><i class="done"></i> Resolved</span><b id="legendResolved">0 (0%)</b></p>
+                            <p><span><i class="closed"></i> Closed</span><b id="legendClosed">0 (0%)</b></p>
+                            <p><span><i class="rejected"></i> Rejected</span><b id="legendRejected">0 (0%)</b></p>
+                        </div>
+                    </article>
+                </section>
+                <section class="report-grid bottom-grid">
+                    <article class="report-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Department performance</h2>
+                                <p>Ticket volume by department</p>
+                            </div><span class="chip">Departments</span>
+                        </div>
+                        <div id="departmentChart" class="bar-list"></div>
+                    </article>
+                    <article class="report-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Tickets by priority</h2>
+                                <p>Understand workload urgency</p>
+                            </div>
+                        </div>
+                        <div id="priorityList" class="bar-list priority-list"></div>
+                    </article>
+                </section>
+                <section class="report-panel summary-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Department report summary</h2>
+                            <p>Ticket resolution snapshot by department</p>
+                        </div><span class="chip">Live database report</span>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Total tickets</th>
+                                    <th>Resolved</th>
+                                    <th>Pending</th>
+                                    <th>Resolution rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departmentTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <footer class="reports-footer">© 2026 Climentos Work Management Platform <span>Designed for better
+                        teamwork.</span></footer>
+            </div>
+        </main>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <script src="../js/reports.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/global.js"></script>
+
+</body>
+
+</html>

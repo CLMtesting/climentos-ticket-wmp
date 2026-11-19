@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Settings - Climentos Work Management Platform">
+    <title>Settings | Climentos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+
+<body>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <a href="dashboard.html" class="brand-logo"><span class="logo-symbol">C</span><span
+                    class="brand-name">climentos<span>.</span></span></a>
+            <div class="workspace-label">WORKSPACE</div>
+            <nav class="sidebar-nav" id="roleNavigation">
+                <a href="dashboard.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">▦</span><span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="EMPLOYEE,MANAGER">TICKETS</div>
+                <a href="raise-ticket.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">＋</span><span>Raise Ticket</span>
+                </a>
+                <a href="my-tickets.html" class="nav-link" data-roles="EMPLOYEE,MANAGER">
+                    <span class="nav-icon">▤</span><span>My Tickets</span>
+                </a>
+                <a href="all-tickets.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">▣</span><span>All Tickets</span>
+                </a>
+
+                <div class="nav-section-label" data-roles="MANAGER,ADMIN">WORKSPACE</div>
+                <a href="team-management.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">♧</span><span>Team Management</span>
+                </a>
+                <a href="reports.html" class="nav-link" data-roles="MANAGER,ADMIN">
+                    <span class="nav-icon">◷</span><span>Reports &amp; Analytics</span>
+                </a>
+
+                <!-- Admin only links -->
+                <a href="user-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">♙</span><span>User Management</span>
+                </a>
+                <a href="department-management.html" class="nav-link" data-roles="ADMIN">
+                    <span class="nav-icon">▥</span><span>Department Management</span>
+                </a>
+                <a href="settings.html" class="nav-link active" data-roles="ADMIN">
+                    <span class="nav-icon">⚙</span><span>Settings</span>
+                </a>
+
+                <div class="nav-section-label">ACCOUNT</div>
+                <a href="employee-profile.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♙</span><span>My Profile</span>
+                </a>
+                <a href="notifications.html" class="nav-link" data-roles="EMPLOYEE,MANAGER,ADMIN">
+                    <span class="nav-icon">♢</span><span>Notifications</span>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <div class="help-icon">✦</div><strong>Need assistance?</strong>
+                    <p>Our team is here to help you.</p><a href="#">Get support →</a>
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar js-user-avatar user-initial">S</div>
+                    <div class="user-info">
+                        <strong class="js-user-name user-name">Sharath Kumar</strong>
+                        <span class="js-user-role user-role">Employee</span>
+                    </div>
+                    <button class="logout-button js-logout" title="Logout" aria-label="Logout">↗</button>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+                    <div class="breadcrumb">Workspace <span>/</span> <strong>Settings</strong></div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="search-box">
+                        <span>⌕</span>
+                        <input type="search" id="settingsSearch" placeholder="Search settings..."
+                            aria-label="Search settings">
+                        <kbd>⌘ K</kbd>
+                    </div>
+
+                    <button class="icon-button" id="themeToggle" aria-label="Switch theme">
+                        <span id="themeIcon">☾</span>
+                    </button>
+
+
+                    <div class="profile-menu">
+                        <button type="button" class="top-user" id="profileMenuTrigger" aria-expanded="false"
+                            aria-controls="profileDropdown" aria-haspopup="true">
+
+                            <div class="user-avatar js-user-avatar user-initial">S</div>
+
+                            <div class="user-info">
+                                <strong class="js-user-name user-name">Sharath Kumar</strong>
+                                <span class="js-user-role user-role">Admin</span>
+                            </div>
+                        </button>
+
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <button type="button" class="dropdown-logout js-logout">
+                                <span>↪</span> Logout
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+            <div class="settings-content">
+                <section class="settings-heading">
+                    <div>
+                        <div class="page-eyebrow">WORKSPACE CONFIGURATION</div>
+                        <h1>Settings <span>✦</span></h1>
+                        <p>Manage workspace preferences and administrative defaults.</p>
+                    </div><button class="settings-save-top" id="saveAllSettings" type="button">Save Changes</button>
+                </section>
+                <div class="settings-layout">
+                    <aside class="settings-nav" aria-label="Settings sections">
+                        <button class="settings-nav-item active" data-target="general"><span>⚙</span> General</button>
+                        <button class="settings-nav-item" data-target="notifications"><span>♢</span>
+                            Notifications</button>
+                        <button class="settings-nav-item" data-target="tickets"><span>▤</span> Ticket Defaults</button>
+                        <button class="settings-nav-item" data-target="security"><span>♙</span> Security</button>
+                    </aside>
+                    <div class="settings-sections">
+                        <section class="settings-card settings-section" id="general" data-section="general">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <h2>General preferences</h2>
+                                    <p>Set the basic preferences for your workspace.</p>
+                                </div><span class="settings-card-icon">⚙</span>
+                            </div>
+                            <div class="settings-fields">
+                                <label class="settings-field">Workspace name<input id="workspaceName" maxlength="80"
+                                        value="Climentos Work Management Platform"></label>
+                                <label class="settings-field">Default language<select id="language">
+                                        <option value="en">English</option>
+                                        <option value="te">తెలుగు</option>
+                                        <option value="hi">हिन्दी</option>
+                                    </select></label>
+                                <label class="settings-field">Date format<select id="dateFormat">
+                                        <option value="DD MMM YYYY">05 Nov 2026</option>
+                                        <option value="MM/DD/YYYY">11/05/2026</option>
+                                        <option value="YYYY-MM-DD">2026-11-05</option>
+                                    </select></label>
+                                <label class="settings-field">Timezone<select id="timezone">
+                                        <option value="Asia/Kolkata">India Standard Time (IST)</option>
+                                        <option value="UTC">UTC</option>
+                                        <option value="Asia/Dubai">Gulf Standard Time (GST)</option>
+                                    </select></label>
+                            </div>
+                        </section>
+                        <section class="settings-card settings-section" id="notifications" data-section="notifications">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <h2>Notification preferences</h2>
+                                    <p>Choose which workspace events should generate notifications.</p>
+                                </div><span class="settings-card-icon">♢</span>
+                            </div>
+                            <div class="settings-options">
+                                <label class="settings-option"><span><strong>New ticket raised</strong><small>Notify
+                                            administrators when a new ticket is submitted.</small></span><input
+                                        type="checkbox" id="notifyNewTicket" checked><i></i></label>
+                                <label class="settings-option"><span><strong>Ticket assigned</strong><small>Notify users
+                                            when a ticket is assigned to them.</small></span><input type="checkbox"
+                                        id="notifyAssigned" checked><i></i></label>
+                                <label class="settings-option"><span><strong>Ticket status changed</strong><small>Notify
+                                            ticket owners when the status changes.</small></span><input type="checkbox"
+                                        id="notifyStatus" checked><i></i></label>
+                                <label class="settings-option"><span><strong>Daily summary</strong><small>Receive a
+                                            daily summary of workspace activity.</small></span><input type="checkbox"
+                                        id="notifySummary"><i></i></label>
+                            </div>
+                        </section>
+                        <section class="settings-card settings-section" id="tickets" data-section="tickets">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <h2>Ticket defaults</h2>
+                                    <p>Configure default values for newly created tickets.</p>
+                                </div><span class="settings-card-icon">▤</span>
+                            </div>
+                            <div class="settings-fields">
+                                <label class="settings-field">Default priority<select id="defaultPriority">
+                                        <option>Medium</option>
+                                        <option>Low</option>
+                                        <option>High</option>
+                                        <option>Critical</option>
+                                    </select></label>
+                                <label class="settings-field">Default ticket status<select id="defaultStatus">
+                                        <option>Open</option>
+                                        <option>New</option>
+                                    </select></label>
+                                <label class="settings-field">Ticket ID prefix<input id="ticketPrefix" maxlength="10"
+                                        value="CLM"></label>
+                                <label class="settings-field">Default response target<select id="responseTarget">
+                                        <option value="1">1 business day</option>
+                                        <option value="2">2 business days</option>
+                                        <option value="4">4 business hours</option>
+                                        <option value="8">8 business hours</option>
+                                    </select></label>
+                            </div>
+                        </section>
+                        <section class="settings-card settings-section" id="security" data-section="security">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <h2>Security preferences</h2>
+                                    <p>Review account and session-related preferences.</p>
+                                </div><span class="settings-card-icon">♙</span>
+                            </div>
+                            <div class="settings-options">
+                                <label class="settings-option"><span><strong>Require strong passwords</strong><small>Set
+                                            a strong-password policy for future account creation.</small></span><input
+                                        type="checkbox" id="strongPasswords" checked><i></i></label>
+                                <label class="settings-option"><span><strong>Session timeout
+                                            reminder</strong><small>Show a reminder before an inactive session
+                                            expires.</small></span><input type="checkbox" id="sessionReminder"
+                                        checked><i></i></label>
+                            </div>
+                            <div class="settings-security-note"><strong>Authentication is not configured here.</strong>
+                                <p>Password rules, session expiry and access control must be enforced by the Flask
+                                    backend. These controls currently save demo preferences only.</p>
+                            </div>
+                        </section>
+                        <div class="settings-bottom-actions"><span id="settingsSaveMessage" role="status">Changes are
+                                stored in this browser in demo mode.</span><button class="settings-save-button"
+                                id="saveSettings" type="button">Save Settings</button><button
+                                class="settings-reset-button" id="resetSettings" type="button">Reset to
+                                Defaults</button></div>
+                    </div>
+                </div>
+                <p class="settings-demo-note">Demo mode: preferences are stored in this browser only. They do not yet
+                    update organization-wide settings or backend security policies.</p>
+            </div>
+        </main>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <script src="../js/settings.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/global.js"></script>
+
+</body>
+
+</html>
